@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        DOCKERHUB_CREDENTIALS=credential('dockerhub')
+        {
     stages{
         stage("checkout"){
             steps{
@@ -12,15 +15,16 @@ pipeline {
                 sh 'docker build -t my-node-app:1.0 .'
             }
         }
-        stage('Docker Push') {
+        stage('login') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub' , passwordVariable: 'Personiv@123$', usernameVariable: 'ar8888')]) {
-                    sh 'docker login -u $ar8888 -p $Personiv@123$'
-                    sh 'docker tag ar8888/pro:1.0'
-                    sh 'docker push ar8888/pro:1.0'
-                    sh 'docker logout'
-                }
-            }
+                sh 'echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin'
+             }
         }
+        stage('push') {
+            steps{
+               sh  'docker push ar8888/my-node-app:1.0'
+            }
+        }   
+    
     }
 }
