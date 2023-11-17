@@ -14,7 +14,7 @@ pipeline {
         }
         stage('Docker Push') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dckr_pat_ciurmzLHGAKTFCKq-XRvyB2nFPs', passwordVariable: 'Personiv@123$', usernameVariable: 'ar8888')]) {
+                withCredentials([usernamePassword(credentialsId: 'jenkins', passwordVariable: 'Personiv@123$', usernameVariable: 'ar8888')]) {
                     sh 'docker login -u $ar8888 -p $Personiv@123$'
                     sh 'docker tag ar8888/pro:1.0'
                     sh 'docker push ar8888/pro:1.0'
