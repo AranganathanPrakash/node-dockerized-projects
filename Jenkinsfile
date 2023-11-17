@@ -25,6 +25,7 @@ pipeline {
                sh  'docker push ar8888/my-node-app:1.0'
             }
         }   
-    
-    }
+  }
 }
+
+        
