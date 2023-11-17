@@ -1,31 +1,31 @@
 pipeline {
-    agent any
-    environment {
-        DOCKERHUB_CREDENTIALS=credential('dockerhub')
-        {
-    stages{
-        stage("checkout"){
-            steps{
-                checkout scm
-            }
-        }
-
-        stage("Build Image"){
-            steps{
-                sh 'docker build -t my-node-app:1.0 .'
-            }
-        }
-        stage('login') {
-            steps {
-                sh 'echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin'
-             }
-        }
-        stage('push') {
-            steps{
-               sh  'docker push ar8888/my-node-app:1.0'
-            }
-        }   
+  agent any
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
+  environment {
+    DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'docker build -t lloydmatereke/jenkins-docker-hub .'
+      }
+    }
+    stage('Login') {
+      steps {
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+      }
+    }
+    stage('Push') {
+      steps {
+        sh 'docker push lloydmatereke/jenkins-docker-hub'
+      }
+    }
+  }
+  post {
+    always {
+      sh 'docker logout'
+    }
   }
 }
-
-        
